@@ -42,8 +42,35 @@ class RecipeBook { //this willsend HTTP request
     //4th: UPDATE RECIPE
     //5th: DELETE RECIPE
 
-    
+    static getAllRecipes() {
+        return $.get(this.url); //use jquery to get all recipes
+    }
 
+    static getRecipe(id) {
+        return $.get(this.url + `${id}`);
+    }
+
+    static createRecipe(recipe) {
+        return $.post(this.url, recipe); //post recipe to api
+    }
+
+    static updateRecipe(recipe) {
+        return $.ajax({
+            url: this.url + `/${recipe._id}`,
+            dataType: 'json',
+            data: JSON.stringify(recipe),
+            contentType: 'application/json',
+            type: 'PUT'
+        })
+    }
+
+
+    static deleteRecipe(id) {
+        return $.ajax({
+            url: this.url + `/${id}`,
+            type: 'DELETE'
+        })
+    }
 }
 
 
