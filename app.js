@@ -101,14 +101,59 @@ class DOMManager {
         })
         .then((recipes) => this.render(recipes));
     }
-
     //add room
     //delete room
-}
+
 
 //BUILD RENDER METHOD
 
+    static render(recipes) {
+        this.recipes = recipes; //recipes is the variable for all recipes inthis DOMMAnAGER
+        $('#app').empty(); //thiswillgrab a reference to the div in HTML and render these 
+        //now for loop to rerender the recipes
+        for(let recipe of recipes) {
+            //add the html in js with prepend and backticks
+            $('#app').prepend(
+            `<div id="${recipe._id}" class="card">
+                <div class="card-header">
+                    <h2>${recipe.name}</h2> 
+                    <button class="btn btn-danger" onclick="DOMManager.deleteRecipe('${recipe._id}')">Delete></button>
+                </div>
+                <div class="card-body">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-sm">
+                                <input type="text" id="${recipe._id})-ingredient-name" class="form-control" placeholder="Ingredient Name">
 
+                            </div>
+                            <div class="col-sm">
+                                <input type="text" id="${recipe._id})-ingredient-amount" class="form-control" placeholder="Ingredient Amount">
+                            </div>
+                        </div>
+                        <button id="${recipe._id}-new-ingredient" onclick="DOMManager.addRoom('${recipe._id}')" class="btn btn-primary form-control">Add</button>
+                    </div>
+                </div>
+            </div><br>`
+        );
+            //nested for loop to render each ingredient inside the recipe
+        
+
+
+            for(let recipe of recipe.ingredients){
+                $(`#${recipe._id}`).find('.card-body').append(
+                    `<p>
+                        <span id="name-${recipe._id}"><strong>Name: </strong> ${recipe.name}</span>
+                        <span id="amount-${ingredient._id}><strong>Amount: </strong> ${recipe.amount}</span>
+                        <button class="btn btn-danger" onclick="DOMManager.deleteRecipe('${recipe._id}', '${ingredient._id}')">Delete Ingredient</button>
+
+                    `
+
+                )
+                
+            }
+        }
+    }
+}
 
 
 
