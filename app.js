@@ -79,8 +79,35 @@ class RecipeBook { //this willsend HTTP request
 //then use recipebook class in DOM manager class
 //rerender the dom when we create a new class
 class DOMManager {
+    static recipes; // this is variable to represent all recipes in this class
 
+    static getAllRecipes() { //this calls the method in Recipe class and rerenders DOM
+        RecipeBook.getAllRecipes().then(recipe => this.render(this.recipes)); //returns promise so use.then
+    }
+
+    static deleteRecipe(id) {
+        RecipeBook.deleteRecipe(id)
+        .then(() => {
+            return RecipeBook.deleteRecipe(); //send http request. delete recipe, get all recipes again and render those recipes again
+
+        })
+        .then((recipes) => this.render(recipes)); //re-render
+    }
+
+    static createRecipe(name) {
+        RecipeBook.createRecipe(new Recipe(name))
+        .then(() => {
+            return RecipeBook.getAllRecipes();
+        })
+        .then((recipes) => this.render(recipes));
+    }
+
+    //add room
+    //delete room
 }
+
+//BUILD RENDER METHOD
+
 
 
 
