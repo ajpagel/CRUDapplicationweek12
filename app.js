@@ -17,7 +17,7 @@ class Recipe {
     //method for adding ingredients
 
     addIngredient(name, amount){
-        this.ingredients.push(new Recipe(name, amount));
+        this.ingredients.push(new Ingredient(name, amount));
     }
 }
 
@@ -31,7 +31,7 @@ class Ingredient {
 
 
 class RecipeBook { //this willsend HTTP request
-    static url = "https://crudcrud.com/api/717ccefe42254ba59de32c272d75be1f";
+    static url = "https://crudcrud.com/apif817655fb1824a9ca5f5449f8be2791c";
 
     //create methods and return so we can use these methods and the promise that comes back
 
@@ -61,7 +61,7 @@ class RecipeBook { //this willsend HTTP request
             data: JSON.stringify(recipe),
             contentType: 'application/json',
             type: 'PUT'
-        })
+        });
     }
 
 
@@ -69,7 +69,7 @@ class RecipeBook { //this willsend HTTP request
         return $.ajax({
             url: this.url + `/${id}`,
             type: 'DELETE'
-        })
+        });
     }
 }
 
@@ -82,7 +82,7 @@ class DOMManager {
     static recipes; // this is variable to represent all recipes in this class
 
     static getAllRecipes() { //this calls the method in Recipe class and rerenders DOM
-        RecipeBook.getAllRecipes().then(recipe => this.render(this.recipes)); //returns promise so use.then
+        RecipeBook.getAllRecipes().then(recipes => this.render(recipes)); //returns promise so use.then
     }
 
     static deleteRecipe(id) {
@@ -101,9 +101,43 @@ class DOMManager {
         })
         .then((recipes) => this.render(recipes));
     }
-    //add room
-    //delete room
+    //add ingredient
+    static addIngredient(id) {
+        for(let recipe of this.recipes){
+            if(recipe._id == id) {
+                recipe.ingredients.push(new Ingredient($(`#${recipe._id}-ingredient-name`).val(), $(`#${recipe._id}-ingredient-amount`).val())); 
+                RecipeBook.updateRecipe(recipe)
+                //send updated request to API to save new data
+                .then(()=> {
+                    return RecipeBook.getAllRecipes();
+                })
+                .then((recipes) => this.render(recipes));
+            
+            }
+        }
+    }
 
+
+
+    //delete ingredient
+
+    static deleteIngredient(recipeId, ingredientId) {
+        for(let recipe of this.recipes) {
+            if(recipe._id == recipeId) {
+                for(let ingredient of recipe.ingredients){
+                    if(ingredient._id == ingredientId) {
+                        recipe.ingredients.splice(recipe.ingredients.indexOf(ingredient), 1);
+                        RecipeBook.updateRecipe(recipe)
+                        .then(()=> {
+                            return RecipeBook.getAllRecipes();
+
+                        })
+                        .then((recipes) => this.render(recipes));
+                    }
+                }
+            }
+        }
+    }
 
 //BUILD RENDER METHOD
 
@@ -139,11 +173,11 @@ class DOMManager {
         
 
 
-            for(let recipe of recipe.ingredients){
+            for(let ingredient of recipe.ingredients){
                 $(`#${recipe._id}`).find('.card-body').append(
                     `<p>
-                        <span id="name-${recipe._id}"><strong>Name: </strong> ${recipe.name}</span>
-                        <span id="amount-${ingredient._id}><strong>Amount: </strong> ${recipe.amount}</span>
+                        <span id="name-${ingredient._id}"><strong>Name: </strong> ${ingredient.name}</span>
+                        <span id="amount-${ingredient._id}><strong>Amount: </strong> ${ingredient.amount}</span>
                         <button class="btn btn-danger" onclick="DOMManager.deleteRecipe('${recipe._id}', '${ingredient._id}')">Delete Ingredient</button>
 
                     `
