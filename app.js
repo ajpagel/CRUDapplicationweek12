@@ -31,7 +31,7 @@ class Ingredient {
 
 
 class RecipeBook { //this willsend HTTP request
-    static url = "https://crudcrud.com/apif817655fb1824a9ca5f5449f8be2791c";
+    static url = "https://crudcrud.com/api/e13cc08d06034a6d852ad7b4157849ee";
 
     //create methods and return so we can use these methods and the promise that comes back
 
@@ -151,7 +151,7 @@ class DOMManager {
             `<div id="${recipe._id}" class="card">
                 <div class="card-header">
                     <h2>${recipe.name}</h2> 
-                    <button class="btn btn-danger" onclick="DOMManager.deleteRecipe('${recipe._id}')">Delete></button>
+                    <button class="btn btn-danger" onclick="DOMManager.deleteRecipe('${recipe._id}')">Delete</button>
                 </div>
                 <div class="card-body">
                     <div class="card">
